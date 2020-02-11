@@ -3,8 +3,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static java.util.Map.Entry.comparingByKey;
+import static java.util.stream.Collectors.toMap;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -12,12 +14,21 @@ public class Main {
 
         Document doc = Jsoup.connect(path).maxBodySize(0).get();
 
-        Elements elements = doc.select("td").select("span");
+        Elements elements = doc.select("td");
         List<String> titles = new ArrayList<>();
+        TreeMap<String, String> lines = new TreeMap<>();
         elements.forEach(element -> {
-            if (element.attr("").contains("линия"))
-            titles.add(element.text());
+                String title = element.getElementsByTag("span").attr("title");
+                if (title.matches("[А-яёЁ\\-\\s]+\\s+линия") || title.matches("[А-яёЁ\\-\\s]+\\s+монорельс")
+                        || title.matches("[А-яёЁ\\-\\s]+\\s+кольцо")) {
+                    lines.put(element.getElementsByTag("span").get(0).text(),title);
+//                    System.out.println(element.getElementsByTag("span").text());
+                }
+//            System.out.println(element.getElementsByTag("span").text());
+
         });
-        titles.forEach(System.out::println);
+        for (Map.Entry entry : lines.entrySet()) {
+            System.out.println(entry.getKey() + " => " + entry.getValue());
+        }
     }
 }
