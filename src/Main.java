@@ -4,6 +4,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Map.Entry.comparingByKey;
 import static java.util.stream.Collectors.toMap;
@@ -17,18 +18,26 @@ public class Main {
         Elements elements = doc.select("td");
         List<String> titles = new ArrayList<>();
         TreeMap<String, String> lines = new TreeMap<>();
+        AtomicInteger i = new AtomicInteger();
+
         elements.forEach(element -> {
-                String title = element.getElementsByTag("span").attr("title");
-                if (title.matches("[А-яёЁ\\-\\s]+\\s+линия") || title.matches("[А-яёЁ\\-\\s]+\\s+монорельс")
-                        || title.matches("[А-яёЁ\\-\\s]+\\s+кольцо")) {
-                    lines.put(element.getElementsByTag("span").get(0).text(),title);
-//                    System.out.println(element.getElementsByTag("span").text());
-                }
-//            System.out.println(element.getElementsByTag("span").text());
+            String lineName = element.getElementsByTag("span").attr("title");
+            String station = element.getElementsByTag("a").attr("title");
+            if (lineName.matches("[А-яёЁ\\-\\s]+\\s+линия") || lineName.matches("[А-яёЁ\\-\\s]+\\s+монорельс")
+                    || lineName.matches("[А-яёЁ\\-\\s]+\\s+кольцо")) {
+                String lineNumber = element.getElementsByTag("span").get(0).text();
+                lines.put(lineNumber, lineName);
+
+            }
+            if (station.contains("станция метро") || station.contains("станция монорельса") || station.contains("станция МЦК") ) {
+                    System.out.println(element.getElementsByTag("a").attr("title"));
+                    i.getAndIncrement();
+            }
 
         });
-        for (Map.Entry entry : lines.entrySet()) {
-            System.out.println(entry.getKey() + " => " + entry.getValue());
-        }
+        System.out.println(i);
+//        for (Map.Entry entry : lines.entrySet()) {
+//            System.out.println(entry.getKey() + " => " + entry.getValue());
+//        }
     }
 }
