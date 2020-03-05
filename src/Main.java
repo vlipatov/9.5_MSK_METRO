@@ -75,7 +75,6 @@ public class Main {
                     }
                 }
             }
-            connection
         }
             int size = info.size();
             System.out.println(size);

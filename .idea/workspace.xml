@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="63f0b922-4f5f-40f8-b1cc-088829b99760" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/gson_2_8_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/gson-2.8.6.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/json-simple-1.1.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/jsoup_1_12_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/jsoup_1_12_1.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/9.5_MSKMETRO.iml" beforeDir="false" afterPath="$PROJECT_DIR$/9.5_MSKMETRO.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parser.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,14 +30,21 @@
   <component name="ProjectId" id="1XcNceVetmMu26f0gzAqyP6Y9AW" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/jsoup-1.12.1.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/json-simple-1.1.jar!/" />
     <property name="project.structure.last.edited" value="Libraries" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.file-colors" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\vadeg\Desktop\Skillbox\9\9.5_MSK_METRO\lib" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\vadeg\Desktop\Skillbox\9\9.5_MSK_METRO\lib" />
     </key>
@@ -87,7 +100,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581619900731</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="oh shit, here we go again">
+      <created>1583269331939</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1583269331939</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -106,6 +126,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1" />
     <MESSAGE value="вывел станции в консоль" />
-    <option name="LAST_COMMIT_MESSAGE" value="вывел станции в консоль" />
+    <MESSAGE value="oh shit, here we go again" />
+    <option name="LAST_COMMIT_MESSAGE" value="oh shit, here we go again" />
   </component>
 </project>
