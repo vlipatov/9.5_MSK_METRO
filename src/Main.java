@@ -1,7 +1,13 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import core.Line;
+import core.Stations;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Main {
@@ -10,9 +16,12 @@ public class Main {
         Parser parser = new Parser(path);
 //        parser.getConnections().forEach(System.out::println);
 //        parser.getLinesPlusStations().forEach(System.out::println);
-        for (Map.Entry entry : parser.getLines().entrySet()) {
-            System.out.println(entry.getKey() + " => " + entry.getValue());
-        }
+//        for (Map.Entry entry : parser.getLines().entrySet()) {
+//            System.out.println(entry.getKey() + " => " + entry.getValue());
+//        }
+//        for (Map.Entry entry : parser.getColorsMap().entrySet()) {
+//            System.out.println(entry.getKey() + " => " + entry.getValue());
+//        }
 
         LineToJSON toJSON = new LineToJSON(parser.getLinesPlusStations(), parser.getLines());
 //        for (Map.Entry entry : toJSON.getNewMap().entrySet()) {
@@ -20,9 +29,16 @@ public class Main {
 //        }
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+        Line lines = new Line(toJSON.getLinesList());
+        Stations stations = new Stations(toJSON.getLinePlusStationsMap());
+
         StringBuilder json = new StringBuilder();
-        json.append(gson.toJson(toJSON.getStationsMap()));
-        json.append(gson.toJson(toJSON.getLinesMap()));
+//        json.append(gson.toJson(toJSON.getStationsMap()));
+//        json.append(gson.toJson(toJSON.getLinesMap()));
+
+        json.append(gson.toJson(stations));
+        json.append(gson.toJson(lines));
+
         System.out.println(json);
 
     }

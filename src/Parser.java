@@ -15,6 +15,8 @@ public class Parser {
     List<String> linesPlusStations = new ArrayList<>();
     TreeMap<String, String> lines = new TreeMap<>();
     TreeSet<String> stations = new TreeSet<>();
+    TreeMap<String, String> colorsMap = new TreeMap<>();
+
     List<String> allConnections = new ArrayList<>();
     AtomicInteger i = new AtomicInteger();
     AtomicReference<String> templine = new AtomicReference<>();
@@ -27,6 +29,7 @@ public class Parser {
 
         for (Element element : elements) {
             String lineName = element.getElementsByTag("span").attr("title");
+            String lineColor = element.attr("style");
             String station = element.getElementsByTag("a").attr("title");
             String connection = element.getElementsByTag("span").attr("title");
             int index = station.indexOf("(");
@@ -38,7 +41,18 @@ public class Parser {
                 String lineNumber = element.getElementsByTag("span").get(0).text();
                 templine.set(lineNumber);
                 templineName.set(lineName);
-                lines.put(lineNumber, lineName);
+                if (lineColor.contains("background:")) {
+                    lines.put(lineNumber, lineName + " [" + lineColor.substring(11) + "]");
+//                    colorsMap.put(lineNumber, lineColor.substring(11));
+                }
+                if (element.getElementsByTag("span").attr("style").contains("display")
+                        && lineNumber.equals("011А")) {
+                    lines.put(lineNumber, lineName + " [" +
+                            element.getElementsByTag("span").attr("style").substring(8) + "]");
+                }
+                if(lineNumber.equals("8А") && lineColor.contains("background:background-color: ")) {
+                    lines.put(lineNumber, lineName + " [" + lineColor.substring(29,36) + "]");
+                }
             }
 
             if (station.contains("станция метро") || station.contains("станция монорельса") || station.contains("станция МЦК")
@@ -67,8 +81,8 @@ public class Parser {
         }
     }
 
-    public List<String> getConnections() {
-        return allConnections;
+    public TreeMap<String, String> getColorsMap() {
+        return colorsMap;
     }
 
     public List<String> getLinesPlusStations() {
