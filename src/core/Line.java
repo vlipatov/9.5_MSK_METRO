@@ -1,21 +1,14 @@
 package core;
 
-import javax.print.attribute.standard.NumberOfInterveningJobs;
-
 public class Line {
-    Object lines;
-    Object stations;
-    Object color;
-    Object number;
-    Object name;
+    private String number;
+    private String name;
+    private String color;
 
-    public Line(Object number, Object name, Object color) {
+    public Line(String number, String name, String color) {
         this.number = number;
         this.name = name;
         this.color = color;
-    }
-    public Line(Object lines) {
-        this.lines = lines;
     }
 
 }

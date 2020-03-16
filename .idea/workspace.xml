@@ -2,13 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="63f0b922-4f5f-40f8-b1cc-088829b99760" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/core/Connection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/Line.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/Stations.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/core/Station.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/toJson.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LineToJSON.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/LineToJSON.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/LineToJSON.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/Line.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Line.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/Stations.java" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
