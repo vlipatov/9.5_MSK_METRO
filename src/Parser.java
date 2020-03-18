@@ -1,5 +1,7 @@
+import com.sun.source.tree.Tree;
 import core.Connection;
 import core.Line;
+import core.Station;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -46,8 +48,8 @@ public class Parser {
                     lines.put(lineNumber, lineName + " [" +
                             element.getElementsByTag("span").attr("style").substring(8) + "]");
                 }
-                if(lineNumber.equals("8А") && lineColor.contains("background:background-color: ")) {
-                    lines.put(lineNumber, lineName + " [" + lineColor.substring(29,36) + "]");
+                if (lineNumber.equals("8А") && lineColor.contains("background:background-color: ")) {
+                    lines.put(lineNumber, lineName + " [" + lineColor.substring(29, 36) + "]");
                 }
             }
 
@@ -107,49 +109,74 @@ public class Parser {
         for (Map.Entry entry : lines.entrySet()) {
             int first = entry.getValue().toString().indexOf("[");
             int last = entry.getValue().toString().lastIndexOf("]");
-            String lineName = entry.getValue().toString().substring(0,first-1);
-            String color = entry.getValue().toString().substring(first+1,last);
+            String lineName = entry.getValue().toString().substring(0, first - 1);
+            String color = entry.getValue().toString().substring(first + 1, last);
             linesList.add(new Line((String) entry.getKey(), lineName, color));
         }
         return linesList;
     }
 
-    public List<Connection> getAllConnections() {
-        String tempStationName = null;
+    public HashSet<HashSet<Station>> getAllConnections() {
+        Station tempStation = null;
         String stationName;
-        for(String connection : allConnections) {
-            int begin = connection.indexOf("]");
-            int end = connection.lastIndexOf("[");
-            stationName = allConnections.get(0).substring(begin, end);
-            if (stationName.equals(templineName) || )
-        }
+        String lineNumber;
+        String secondStationName;
+        String secondLineNumber;
+        HashSet<Station> stations = new HashSet<>();
+        HashSet<HashSet<Station>> connections = new HashSet<>();
 
-        return allConnections;
+        for (String connection : allConnections) {
+            int firstBracketStart = connection.indexOf("[") + 1;
+            int firstBracketEnd = connection.indexOf("]");
+            int lastBracketStart = connection.lastIndexOf("[") + 1;
+            int lastBracketEnd = connection.lastIndexOf("]");
+
+            stationName = connection.substring(firstBracketEnd + 2, lastBracketStart - 5);
+            lineNumber = connection.substring(firstBracketStart, firstBracketEnd);
+            secondStationName = connection.substring(lastBracketEnd + 2);
+            secondLineNumber = connection.substring(lastBracketStart, lastBracketEnd);
+
+            stations.add(new Station(lineNumber, stationName));
+            for (Station station : stations) {
+                if (station.equals(tempStation)) {
+                    stations.add(new Station(secondLineNumber, secondStationName));
+                    connections.add(new HashSet<>(stations));
+                } else {
+                    stations.clear();
+                    stations.add(new Station(lineNumber, stationName));
+                    stations.add(new Station(secondLineNumber, secondStationName));
+                    connections.add(new HashSet<>(stations));
+                    tempStation = new Station(lineNumber, stationName);
+
+                }
+            }
+        }
+        return connections;
     }
 
-    public static String trimmer(String string) {
-        String newString = null;
-        if (string.contains("Переход")) {
-            newString = string.substring(19);
-        } else if (string.contains("пересадка")) {
-            newString = string.substring(41);
-        }
-        if (newString.contains(" Московского центрального кольца")) {
-            newString = newString.substring(0, newString.length() - 32);
-        }
-        if (newString.contains("Большой кольцевой линии")) {
-            newString = newString.substring(0, newString.length() - 24);
-        }
-        if (newString.contains("линии")) {
-            newString = newString.substring(0, newString.lastIndexOf(" "));
-            newString = newString.substring(0, newString.lastIndexOf(" "));
-        }
-        if (newString.contains("(станция метро)")) {
-            newString = newString.substring(0, newString.length() - 16);
-        }
-        if (newString.contains("Московского монорельса"))
-            newString = newString.substring(0, newString.length() - 23);
+        public static String trimmer (String string){
+            String newString = null;
+            if (string.contains("Переход")) {
+                newString = string.substring(19);
+            } else if (string.contains("пересадка")) {
+                newString = string.substring(41);
+            }
+            if (newString.contains(" Московского центрального кольца")) {
+                newString = newString.substring(0, newString.length() - 32);
+            }
+            if (newString.contains("Большой кольцевой линии")) {
+                newString = newString.substring(0, newString.length() - 24);
+            }
+            if (newString.contains("линии")) {
+                newString = newString.substring(0, newString.lastIndexOf(" "));
+                newString = newString.substring(0, newString.lastIndexOf(" "));
+            }
+            if (newString.contains("(станция метро)")) {
+                newString = newString.substring(0, newString.length() - 16);
+            }
+            if (newString.contains("Московского монорельса"))
+                newString = newString.substring(0, newString.length() - 23);
 
-        return newString;
+            return newString;
+        }
     }
-}

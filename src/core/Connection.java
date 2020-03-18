@@ -1,15 +1,16 @@
 package core;
 
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.TreeSet;
 
 public class Connection {
-    private String line;
-    private String station;
+    private TreeSet<Station> stations;
 
-    public Connection(String line, String station) {
-        this.line = line;
-        this.station = station;
+    public TreeSet<Station> getStations() {
+        return stations;
+    }
+
+    public Connection(TreeSet<Station> stations) {
+        this.stations = stations;
     }
 
 }
