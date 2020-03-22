@@ -21,6 +21,16 @@ public class Parser {
     private AtomicReference<String> templine = new AtomicReference<>();
     private AtomicReference<String> templineName = new AtomicReference<>();
     private AtomicReference<String> tempStation = new AtomicReference<>();
+    private ArrayList<HashSet<Station>> stationsHashSetList = new ArrayList<>();
+    private HashSet<HashSet<Station>> connections;
+
+    public ArrayList<HashSet<Station>> getStationsHashSetList() {
+        return stationsHashSetList;
+    }
+
+    public HashSet<HashSet<Station>> getConnections() {
+        return connections;
+    }
 
     public Parser(String path) throws IOException {
         Document doc = Jsoup.connect(path).maxBodySize(0).get();
@@ -76,6 +86,47 @@ public class Parser {
                 }
             }
         }
+
+        for (Map.Entry entry : lines.entrySet()) {
+            int first = entry.getValue().toString().indexOf("[");
+            int last = entry.getValue().toString().lastIndexOf("]");
+            String lineNameOK = entry.getValue().toString().substring(0, first - 1);
+            String color = entry.getValue().toString().substring(first + 1, last);
+            linesList.add(new Line((String) entry.getKey(), lineNameOK, color));
+        }
+
+        for (String line : allConnections) {
+            String stationName;
+            String lineNumber;
+            String secondStationName;
+            String secondLineNumber;
+            int firstBracketStart = line.indexOf("[") + 1;
+            int firstBracketEnd = line.indexOf("]");
+            int lastBracketStart = line.lastIndexOf("[") + 1;
+            int lastBracketEnd = line.lastIndexOf("]");
+
+            stationName = line.substring(firstBracketEnd + 2, lastBracketStart - 5);
+            lineNumber = line.substring(firstBracketStart, firstBracketEnd);
+            secondStationName = line.substring(lastBracketEnd + 2);
+            secondLineNumber = line.substring(lastBracketStart, lastBracketEnd);
+            HashSet<Station> buffer = new HashSet<>();
+            buffer.add(new Station(lineNumber, stationName));
+            buffer.add(new Station(secondLineNumber, secondStationName));
+            stationsHashSetList.add(new HashSet<>(buffer));
+            buffer.clear();
+        }
+
+        ArrayList<HashSet<Station>> connectionsCopy = new ArrayList<>(stationsHashSetList);
+        for (HashSet<Station> oldTreeSet : stationsHashSetList) {
+            for (Station oldStation : oldTreeSet) {
+                for (HashSet<Station> newTreeSet : connectionsCopy) {
+                    if (newTreeSet.contains(oldStation)) {
+                        newTreeSet.addAll(oldTreeSet);
+                    }
+                }
+            }
+        }
+        connections = new HashSet<>(connectionsCopy);
     }
 
     public TreeMap<String, ArrayList<String>> getLinesPlusStationsMap() {
@@ -105,14 +156,6 @@ public class Parser {
     }
 
     public ArrayList<Line> getLinesList() {
-
-        for (Map.Entry entry : lines.entrySet()) {
-            int first = entry.getValue().toString().indexOf("[");
-            int last = entry.getValue().toString().lastIndexOf("]");
-            String lineName = entry.getValue().toString().substring(0, first - 1);
-            String color = entry.getValue().toString().substring(first + 1, last);
-            linesList.add(new Line((String) entry.getKey(), lineName, color));
-        }
         return linesList;
     }
 
@@ -124,7 +167,6 @@ public class Parser {
         String secondLineNumber;
         HashSet<Station> stations = new HashSet<>();
         HashSet<HashSet<Station>> connections = new HashSet<>();
-
         for (String connection : allConnections) {
             int firstBracketStart = connection.indexOf("[") + 1;
             int firstBracketEnd = connection.indexOf("]");
@@ -135,48 +177,49 @@ public class Parser {
             lineNumber = connection.substring(firstBracketStart, firstBracketEnd);
             secondStationName = connection.substring(lastBracketEnd + 2);
             secondLineNumber = connection.substring(lastBracketStart, lastBracketEnd);
-
             stations.add(new Station(lineNumber, stationName));
-            for (Station station : stations) {
-                if (station.equals(tempStation)) {
-                    stations.add(new Station(secondLineNumber, secondStationName));
-                    connections.add(new HashSet<>(stations));
-                } else {
-                    stations.clear();
-                    stations.add(new Station(lineNumber, stationName));
-                    stations.add(new Station(secondLineNumber, secondStationName));
-                    connections.add(new HashSet<>(stations));
-                    tempStation = new Station(lineNumber, stationName);
-
+            if (!stations.isEmpty()) {
+                for (Station station : stations) {
+                    if (station.equals(tempStation.getLine())
+                            && station.equals(tempStation.getStation())) {
+                        stations.add(new Station(secondLineNumber, secondStationName));
+                        connections.add(new HashSet<>(stations));
+                    } else {
+                        stations.clear();
+                        stations.add(new Station(lineNumber, stationName));
+                        stations.add(new Station(secondLineNumber, secondStationName));
+                        connections.add(new HashSet<>(stations));
+                        tempStation = new Station(lineNumber, stationName);
+                    }
                 }
             }
         }
         return connections;
     }
 
-        public static String trimmer (String string){
-            String newString = null;
-            if (string.contains("Переход")) {
-                newString = string.substring(19);
-            } else if (string.contains("пересадка")) {
-                newString = string.substring(41);
-            }
-            if (newString.contains(" Московского центрального кольца")) {
-                newString = newString.substring(0, newString.length() - 32);
-            }
-            if (newString.contains("Большой кольцевой линии")) {
-                newString = newString.substring(0, newString.length() - 24);
-            }
-            if (newString.contains("линии")) {
-                newString = newString.substring(0, newString.lastIndexOf(" "));
-                newString = newString.substring(0, newString.lastIndexOf(" "));
-            }
-            if (newString.contains("(станция метро)")) {
-                newString = newString.substring(0, newString.length() - 16);
-            }
-            if (newString.contains("Московского монорельса"))
-                newString = newString.substring(0, newString.length() - 23);
-
-            return newString;
+    public static String trimmer(String string) {
+        String newString = null;
+        if (string.contains("Переход")) {
+            newString = string.substring(19);
+        } else if (string.contains("пересадка")) {
+            newString = string.substring(41);
         }
+        if (newString.contains(" Московского центрального кольца")) {
+            newString = newString.substring(0, newString.length() - 32);
+        }
+        if (newString.contains("Большой кольцевой линии")) {
+            newString = newString.substring(0, newString.length() - 24);
+        }
+        if (newString.contains("линии")) {
+            newString = newString.substring(0, newString.lastIndexOf(" "));
+            newString = newString.substring(0, newString.lastIndexOf(" "));
+        }
+        if (newString.contains("(станция метро)")) {
+            newString = newString.substring(0, newString.length() - 16);
+        }
+        if (newString.contains("Московского монорельса"))
+            newString = newString.substring(0, newString.length() - 23);
+
+        return newString;
     }
+}

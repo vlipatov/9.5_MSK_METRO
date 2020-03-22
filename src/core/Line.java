@@ -1,6 +1,6 @@
 package core;
 
-public class Line {
+public class Line implements Comparable<Line> {
     private String number;
     private String name;
     private String color;
@@ -11,4 +11,21 @@ public class Line {
         this.color = color;
     }
 
+    public String getNumber() {
+        return number;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int compareTo(Line line) {
+        return CharSequence.compare(number, line.getNumber());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return compareTo((Line) obj) == 0;
+    }
 }

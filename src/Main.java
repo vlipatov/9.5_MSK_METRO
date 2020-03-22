@@ -16,9 +16,13 @@ public class Main {
         Parser parser = new Parser(path);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         StringBuilder json = new StringBuilder();
-        toJson anus = new toJson(parser.getLinesPlusStationsMap(), parser.getLinesList(), parser.getAllConnections());
+        toJson anus = new toJson(parser.getLinesPlusStationsMap(), parser.getLinesList(), parser.getConnections());
         json.append(gson.toJson(anus));
         System.out.println(json);
 //        parser.getAllConnections().forEach(System.out::println);
+//        System.out.println(parser.getAllConnections());
+//        System.out.println(parser.getStationsHashSetList().size());
+//        System.out.println(parser.getConnections().size());
+//
     }
 }

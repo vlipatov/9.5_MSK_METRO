@@ -1,8 +1,12 @@
 package core;
 
-public class Station implements Comparable<Station>{
+public class Station implements Comparable<Station> {
     private String line;
     private String station;
+
+    public String getLine() {
+        return line;
+    }
 
     public Station(String line, String station) {
         this.line = line;
@@ -13,10 +17,23 @@ public class Station implements Comparable<Station>{
         return station;
     }
 
-    public int compareTo(Station p){
-        if (station.equals(p.getStation())) {
-            return 0;
+    @Override
+    public int compareTo(Station stn) {
+        int lineComparison = line.compareTo(stn.getLine());
+        if (lineComparison != 0) {
+            return lineComparison;
         }
-        else return 1;
+        return station.compareToIgnoreCase(stn.getStation());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return compareTo((Station) obj) == 0;
+    }
+
+    @Override
+    public String toString() {
+        return station;
+    }
+
 }
