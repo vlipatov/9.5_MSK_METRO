@@ -1,5 +1,3 @@
-import com.sun.source.tree.Tree;
-import core.Connection;
 import core.Line;
 import core.Station;
 import org.jsoup.Jsoup;
@@ -9,7 +7,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Parser {
@@ -18,19 +15,12 @@ public class Parser {
     private TreeSet<String> stations = new TreeSet<>();
     private List<String> allConnections = new ArrayList<>();
     private ArrayList<Line> linesList = new ArrayList<>();
+    private TreeSet<Line> linesTest = new TreeSet<>();
     private AtomicReference<String> templine = new AtomicReference<>();
     private AtomicReference<String> templineName = new AtomicReference<>();
     private AtomicReference<String> tempStation = new AtomicReference<>();
     private ArrayList<HashSet<Station>> stationsHashSetList = new ArrayList<>();
     private HashSet<HashSet<Station>> connections;
-
-    public ArrayList<HashSet<Station>> getStationsHashSetList() {
-        return stationsHashSetList;
-    }
-
-    public HashSet<HashSet<Station>> getConnections() {
-        return connections;
-    }
 
     public Parser(String path) throws IOException {
         Document doc = Jsoup.connect(path).maxBodySize(0).get();
@@ -52,14 +42,17 @@ public class Parser {
                 templineName.set(lineName);
                 if (lineColor.contains("background:")) {
                     lines.put(lineNumber, lineName + " [" + lineColor.substring(11) + "]");
+                    linesTest.add(new Line(lineNumber, lineName, lineColor.substring(11)));
                 }
                 if (element.getElementsByTag("span").attr("style").contains("display")
                         && lineNumber.equals("011А")) {
                     lines.put(lineNumber, lineName + " [" +
                             element.getElementsByTag("span").attr("style").substring(8) + "]");
+                    linesTest.add(new Line(lineNumber, lineName, element.getElementsByTag("span").attr("style").substring(8)));
                 }
                 if (lineNumber.equals("8А") && lineColor.contains("background:background-color: ")) {
                     lines.put(lineNumber, lineName + " [" + lineColor.substring(29, 36) + "]");
+                    linesTest.add(new Line(lineNumber, lineName, lineColor.substring(29, 36)));
                 }
             }
 
@@ -85,48 +78,35 @@ public class Parser {
                     }
                 }
             }
+//            for (Map.Entry entry : lines.entrySet()) {
+//                int first = entry.getValue().toString().indexOf("[");
+//                int last = entry.getValue().toString().lastIndexOf("]");
+//                String lineNameOK = entry.getValue().toString().substring(0, first - 1);
+//                String color = entry.getValue().toString().substring(first + 1, last);
+//                linesList.add(new Line((String) entry.getKey(), lineNameOK, color));
+//            }
         }
 
-        for (Map.Entry entry : lines.entrySet()) {
-            int first = entry.getValue().toString().indexOf("[");
-            int last = entry.getValue().toString().lastIndexOf("]");
-            String lineNameOK = entry.getValue().toString().substring(0, first - 1);
-            String color = entry.getValue().toString().substring(first + 1, last);
-            linesList.add(new Line((String) entry.getKey(), lineNameOK, color));
-        }
 
-        for (String line : allConnections) {
-            String stationName;
-            String lineNumber;
-            String secondStationName;
-            String secondLineNumber;
-            int firstBracketStart = line.indexOf("[") + 1;
-            int firstBracketEnd = line.indexOf("]");
-            int lastBracketStart = line.lastIndexOf("[") + 1;
-            int lastBracketEnd = line.lastIndexOf("]");
-
-            stationName = line.substring(firstBracketEnd + 2, lastBracketStart - 5);
-            lineNumber = line.substring(firstBracketStart, firstBracketEnd);
-            secondStationName = line.substring(lastBracketEnd + 2);
-            secondLineNumber = line.substring(lastBracketStart, lastBracketEnd);
-            HashSet<Station> buffer = new HashSet<>();
-            buffer.add(new Station(lineNumber, stationName));
-            buffer.add(new Station(secondLineNumber, secondStationName));
-            stationsHashSetList.add(new HashSet<>(buffer));
-            buffer.clear();
-        }
-
-        ArrayList<HashSet<Station>> connectionsCopy = new ArrayList<>(stationsHashSetList);
-        for (HashSet<Station> oldTreeSet : stationsHashSetList) {
-            for (Station oldStation : oldTreeSet) {
-                for (HashSet<Station> newTreeSet : connectionsCopy) {
-                    if (newTreeSet.contains(oldStation)) {
-                        newTreeSet.addAll(oldTreeSet);
-                    }
-                }
-            }
-        }
-        connections = new HashSet<>(connectionsCopy);
+//        for (String line : allConnections) {
+//            String stationName;
+//            String lineNumber;
+//            String secondStationName;
+//            String secondLineNumber;
+//            int firstBracketStart = line.indexOf("[") + 1;
+//            int firstBracketEnd = line.indexOf("]");
+//            int lastBracketStart = line.lastIndexOf("[") + 1;
+//            int lastBracketEnd = line.lastIndexOf("]");
+//
+//            stationName = line.substring(firstBracketEnd + 2, lastBracketStart - 5);
+//            lineNumber = line.substring(firstBracketStart, firstBracketEnd);
+//            secondStationName = line.substring(lastBracketEnd + 2);
+//            secondLineNumber = line.substring(lastBracketStart, lastBracketEnd);
+//            HashSet<Station> buffer = new HashSet<>();
+//            buffer.add(new Station(lineNumber, stationName));
+//            buffer.add(new Station(secondLineNumber, secondStationName));
+//            stationsHashSetList.add(new HashSet<>(buffer));
+//            buffer.clear();
     }
 
     public TreeMap<String, ArrayList<String>> getLinesPlusStationsMap() {
@@ -159,14 +139,27 @@ public class Parser {
         return linesList;
     }
 
-    public HashSet<HashSet<Station>> getAllConnections() {
-        Station tempStation = null;
+    public TreeSet<Line> getLinesTest() {
+        return linesTest;
+    }
+
+    public ArrayList<HashSet<Station>> getStationsHashSetList() {
+        return stationsHashSetList;
+    }
+
+    public HashSet<HashSet<Station>> getConnections() {
+        return connections;
+    }
+
+    public HashSet<TreeSet<Station>> getConnectionsFinal() {
         String stationName;
         String lineNumber;
         String secondStationName;
         String secondLineNumber;
-        HashSet<Station> stations = new HashSet<>();
-        HashSet<HashSet<Station>> connections = new HashSet<>();
+        TreeSet<Station> stations = new TreeSet<>();
+        ArrayList<TreeSet<Station>> connections = new ArrayList<>();
+        HashSet<TreeSet<Station>> connectionsFinal;
+
         for (String connection : allConnections) {
             int firstBracketStart = connection.indexOf("[") + 1;
             int firstBracketEnd = connection.indexOf("]");
@@ -177,25 +170,41 @@ public class Parser {
             lineNumber = connection.substring(firstBracketStart, firstBracketEnd);
             secondStationName = connection.substring(lastBracketEnd + 2);
             secondLineNumber = connection.substring(lastBracketStart, lastBracketEnd);
-            stations.add(new Station(lineNumber, stationName));
-            if (!stations.isEmpty()) {
-                for (Station station : stations) {
-                    if (station.equals(tempStation.getLine())
-                            && station.equals(tempStation.getStation())) {
-                        stations.add(new Station(secondLineNumber, secondStationName));
-                        connections.add(new HashSet<>(stations));
-                    } else {
-                        stations.clear();
-                        stations.add(new Station(lineNumber, stationName));
-                        stations.add(new Station(secondLineNumber, secondStationName));
-                        connections.add(new HashSet<>(stations));
-                        tempStation = new Station(lineNumber, stationName);
+
+            for (Line line : linesTest) {
+                if (lineNumber.equals(line.getNumber())) {
+                    stations.add(new Station(stationName, line));
+                    for (Line secondLine : linesTest) {
+                        if (secondLineNumber.equals(secondLine.getNumber())) {
+                            stations.add(new Station(secondStationName, secondLine));
+                        }
+                    }
+                    connections.add(new TreeSet<>(stations));
+                    stations.clear();
+                }
+            }
+        }
+
+        ArrayList<TreeSet<Station>> connectionsCopy = new ArrayList<>(connections);
+
+        for (TreeSet<Station> oldTreeSet : connections) {
+            for (Station oldStation : oldTreeSet) {
+                for (TreeSet<Station> newTreeSet : connectionsCopy) {
+                    if (newTreeSet.contains(oldStation)) {
+                        for (Station station : newTreeSet) {
+                            if (station.getLine().equals(oldStation.getLine()))
+                                newTreeSet.add(station);
+                        }
+//                        newTreeSet.addAll(oldTreeSet);
                     }
                 }
             }
         }
-        return connections;
+        connectionsFinal = new HashSet<>(connectionsCopy);
+
+        return connectionsFinal;
     }
+
 
     public static String trimmer(String string) {
         String newString = null;

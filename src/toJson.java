@@ -10,10 +10,10 @@ import java.util.TreeSet;
 
 public class toJson {
     private TreeMap<String, ArrayList<String>> stations;
-    private ArrayList<Line> lines;
-    private HashSet<HashSet<Station>> connections;
+    private TreeSet<Line> lines;
+    private HashSet<TreeSet<Station>> connections;
 
-    public toJson(TreeMap stations, ArrayList lines, HashSet connections) {
+    public toJson(TreeMap stations, TreeSet lines, HashSet connections) {
         this.stations = stations;
         this.lines = lines;
         this.connections = connections;

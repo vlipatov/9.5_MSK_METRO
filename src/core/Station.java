@@ -1,29 +1,45 @@
 package core;
+import com.google.gson.annotations.SerializedName;
 
 public class Station implements Comparable<Station> {
-    private String line;
-    private String station;
 
-    public String getLine() {
+    private transient Line line;
+    private String name;
+    @SerializedName("line")
+    private String lineNumber;
+
+    public Station(String name, Line line) {
+
+        this.name = name;
+
+        this.line = line;
+        lineNumber = line.getNumber();
+    }
+
+    public Line getLine() {
         return line;
     }
 
-    public Station(String line, String station) {
-        this.line = line;
-        this.station = station;
-    }
-
-    public String getStation() {
-        return station;
+    public String getName() {
+        return name;
     }
 
     @Override
-    public int compareTo(Station stn) {
-        int lineComparison = line.compareTo(stn.getLine());
+    public int compareTo(Station station) {
+        int lineComparison = line.compareTo(station.getLine());
         if (lineComparison != 0) {
             return lineComparison;
         }
-        return station.compareToIgnoreCase(stn.getStation());
+        return name.compareToIgnoreCase(station.getName());
+    }
+
+
+    public void setLine1(Line line1) {
+        this.line = line1;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -33,7 +49,6 @@ public class Station implements Comparable<Station> {
 
     @Override
     public String toString() {
-        return station;
+        return name;
     }
-
 }
