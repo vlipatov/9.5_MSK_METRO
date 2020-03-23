@@ -1,14 +1,19 @@
 package core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Line implements Comparable<Line> {
     private String number;
     private String name;
+    private transient List<Station> stations;
     private String color;
 
     public Line(String number, String name, String color) {
         this.number = number;
         this.name = name;
         this.color = color;
+        stations = new ArrayList<>();
     }
 
     public String getNumber() {
@@ -17,6 +22,13 @@ public class Line implements Comparable<Line> {
 
     public String getName() {
         return name;
+    }
+    public void setStations(List<Station> stations) {
+        this.stations = stations;
+    }
+
+    public List<Station> getStations() {
+        return stations;
     }
 
     @Override

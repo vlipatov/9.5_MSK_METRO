@@ -9,7 +9,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class toJson {
-    private TreeMap<String, ArrayList<String>> stations;
+    TreeMap<String, ArrayList<String>> stations;
     private TreeSet<Line> lines;
     private HashSet<TreeSet<Station>> connections;
 

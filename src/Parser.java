@@ -14,13 +14,11 @@ public class Parser {
     private TreeMap<String, String> lines = new TreeMap<>();
     private TreeSet<String> stations = new TreeSet<>();
     private List<String> allConnections = new ArrayList<>();
-    private ArrayList<Line> linesList = new ArrayList<>();
-    private TreeSet<Line> linesTest = new TreeSet<>();
+    private TreeSet<Line> linesSet = new TreeSet<>();
     private AtomicReference<String> templine = new AtomicReference<>();
     private AtomicReference<String> templineName = new AtomicReference<>();
     private AtomicReference<String> tempStation = new AtomicReference<>();
-    private ArrayList<HashSet<Station>> stationsHashSetList = new ArrayList<>();
-    private HashSet<HashSet<Station>> connections;
+
 
     public Parser(String path) throws IOException {
         Document doc = Jsoup.connect(path).maxBodySize(0).get();
@@ -42,17 +40,17 @@ public class Parser {
                 templineName.set(lineName);
                 if (lineColor.contains("background:")) {
                     lines.put(lineNumber, lineName + " [" + lineColor.substring(11) + "]");
-                    linesTest.add(new Line(lineNumber, lineName, lineColor.substring(11)));
+                    linesSet.add(new Line(lineNumber, lineName, lineColor.substring(11)));
                 }
                 if (element.getElementsByTag("span").attr("style").contains("display")
                         && lineNumber.equals("011А")) {
                     lines.put(lineNumber, lineName + " [" +
                             element.getElementsByTag("span").attr("style").substring(8) + "]");
-                    linesTest.add(new Line(lineNumber, lineName, element.getElementsByTag("span").attr("style").substring(8)));
+                    linesSet.add(new Line(lineNumber, lineName, element.getElementsByTag("span").attr("style").substring(8)));
                 }
                 if (lineNumber.equals("8А") && lineColor.contains("background:background-color: ")) {
                     lines.put(lineNumber, lineName + " [" + lineColor.substring(29, 36) + "]");
-                    linesTest.add(new Line(lineNumber, lineName, lineColor.substring(29, 36)));
+                    linesSet.add(new Line(lineNumber, lineName, lineColor.substring(29, 36)));
                 }
             }
 
@@ -78,48 +76,28 @@ public class Parser {
                     }
                 }
             }
-//            for (Map.Entry entry : lines.entrySet()) {
-//                int first = entry.getValue().toString().indexOf("[");
-//                int last = entry.getValue().toString().lastIndexOf("]");
-//                String lineNameOK = entry.getValue().toString().substring(0, first - 1);
-//                String color = entry.getValue().toString().substring(first + 1, last);
-//                linesList.add(new Line((String) entry.getKey(), lineNameOK, color));
-//            }
         }
-
-
-//        for (String line : allConnections) {
-//            String stationName;
-//            String lineNumber;
-//            String secondStationName;
-//            String secondLineNumber;
-//            int firstBracketStart = line.indexOf("[") + 1;
-//            int firstBracketEnd = line.indexOf("]");
-//            int lastBracketStart = line.lastIndexOf("[") + 1;
-//            int lastBracketEnd = line.lastIndexOf("]");
-//
-//            stationName = line.substring(firstBracketEnd + 2, lastBracketStart - 5);
-//            lineNumber = line.substring(firstBracketStart, firstBracketEnd);
-//            secondStationName = line.substring(lastBracketEnd + 2);
-//            secondLineNumber = line.substring(lastBracketStart, lastBracketEnd);
-//            HashSet<Station> buffer = new HashSet<>();
-//            buffer.add(new Station(lineNumber, stationName));
-//            buffer.add(new Station(secondLineNumber, secondStationName));
-//            stationsHashSetList.add(new HashSet<>(buffer));
-//            buffer.clear();
     }
 
+    /**                  Метод для получения формирования линий и массивов станций твынес в геттер                    */
     public TreeMap<String, ArrayList<String>> getLinesPlusStationsMap() {
         String lineNumber;
         String tempLineNumber = null;
         String stationName;
         ArrayList<String> stations = new ArrayList<>();
+        ArrayList<Station> stationsList = new ArrayList<>();
         TreeMap<String, ArrayList<String>> linesPlusStationsMap = new TreeMap<>();
         for (String line : linesPlusStations) {
             int begin = line.indexOf("[") + 1;
             int end = line.indexOf("]");
             lineNumber = line.substring(begin, end);
             stationName = line.substring(line.lastIndexOf(">") + 2);
+            for (Line lane : linesSet) {
+                if (lineNumber.equals(lane.getNumber())) {
+                    stationsList.add(new Station(stationName, lane));
+                }
+                lane.setStations(new ArrayList<>(stationsList));
+            }
             if (lineNumber.charAt(0) == '0') {
                 lineNumber = lineNumber.substring(1);
             }
@@ -135,22 +113,11 @@ public class Parser {
         return linesPlusStationsMap;
     }
 
-    public ArrayList<Line> getLinesList() {
-        return linesList;
+    public TreeSet<Line> getLinesSet() {
+        return linesSet;
     }
 
-    public TreeSet<Line> getLinesTest() {
-        return linesTest;
-    }
-
-    public ArrayList<HashSet<Station>> getStationsHashSetList() {
-        return stationsHashSetList;
-    }
-
-    public HashSet<HashSet<Station>> getConnections() {
-        return connections;
-    }
-
+    /**                  Метод для получения пересадок для записи в JSON вынес в геттер                               */
     public HashSet<TreeSet<Station>> getConnectionsFinal() {
         String stationName;
         String lineNumber;
@@ -171,12 +138,20 @@ public class Parser {
             secondStationName = connection.substring(lastBracketEnd + 2);
             secondLineNumber = connection.substring(lastBracketStart, lastBracketEnd);
 
-            for (Line line : linesTest) {
+            for (Line line : linesSet) {
                 if (lineNumber.equals(line.getNumber())) {
-                    stations.add(new Station(stationName, line));
-                    for (Line secondLine : linesTest) {
+                    for (Station station : line.getStations())
+                    {
+                        if(stationName.equals(station.getName()))
+                        stations.add(station);
+                    }
+                    for (Line secondLine : linesSet) {
                         if (secondLineNumber.equals(secondLine.getNumber())) {
-                            stations.add(new Station(secondStationName, secondLine));
+                            for (Station station : line.getStations())
+                            {
+                                if(secondStationName.equals(station.getName()))
+                                    stations.add(station);
+                            }
                         }
                     }
                     connections.add(new TreeSet<>(stations));
@@ -191,11 +166,7 @@ public class Parser {
             for (Station oldStation : oldTreeSet) {
                 for (TreeSet<Station> newTreeSet : connectionsCopy) {
                     if (newTreeSet.contains(oldStation)) {
-                        for (Station station : newTreeSet) {
-                            if (station.getLine().equals(oldStation.getLine()))
-                                newTreeSet.add(station);
-                        }
-//                        newTreeSet.addAll(oldTreeSet);
+                        newTreeSet.addAll(oldTreeSet);
                     }
                 }
             }
@@ -204,8 +175,7 @@ public class Parser {
 
         return connectionsFinal;
     }
-
-
+    /**                  Метод для форматирования текста в описании пересадки                                         */
     public static String trimmer(String string) {
         String newString = null;
         if (string.contains("Переход")) {
