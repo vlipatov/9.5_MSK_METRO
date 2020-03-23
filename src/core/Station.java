@@ -16,6 +16,7 @@ public class Station implements Comparable<Station> {
         lineNumber = line.getNumber();
     }
 
+
     public Line getLine() {
         return line;
     }

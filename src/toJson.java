@@ -18,5 +18,8 @@ public class toJson {
         this.lines = lines;
         this.connections = connections;
     }
+    public TreeMap<String, ArrayList<String>> getStations() {
+        return stations;
+    }
 
 }

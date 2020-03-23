@@ -85,7 +85,6 @@ public class Parser {
         String tempLineNumber = null;
         String stationName;
         ArrayList<String> stations = new ArrayList<>();
-        ArrayList<Station> stationsList = new ArrayList<>();
         TreeMap<String, ArrayList<String>> linesPlusStationsMap = new TreeMap<>();
         for (String line : linesPlusStations) {
             int begin = line.indexOf("[") + 1;
@@ -94,9 +93,8 @@ public class Parser {
             stationName = line.substring(line.lastIndexOf(">") + 2);
             for (Line lane : linesSet) {
                 if (lineNumber.equals(lane.getNumber())) {
-                    stationsList.add(new Station(stationName, lane));
+                    lane.addStation(new Station(stationName, lane));
                 }
-                lane.setStations(new ArrayList<>(stationsList));
             }
             if (lineNumber.charAt(0) == '0') {
                 lineNumber = lineNumber.substring(1);
@@ -143,14 +141,14 @@ public class Parser {
                     for (Station station : line.getStations())
                     {
                         if(stationName.equals(station.getName()))
-                        stations.add(station);
+                            stations.add(station);
                     }
                     for (Line secondLine : linesSet) {
                         if (secondLineNumber.equals(secondLine.getNumber())) {
-                            for (Station station : line.getStations())
+                            for (Station secondStation : secondLine.getStations())
                             {
-                                if(secondStationName.equals(station.getName()))
-                                    stations.add(station);
+                                if(secondStationName.equals(secondStation.getName()))
+                                    stations.add(secondStation);
                             }
                         }
                     }

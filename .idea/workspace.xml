@@ -3,10 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="63f0b922-4f5f-40f8-b1cc-088829b99760" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/map.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/Line.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Line.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/Station.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Station.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/toJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/toJson.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,7 +24,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_CHANGES_POLICY" value="SHELVE" />
   </component>
   <component name="ProjectId" id="1XcNceVetmMu26f0gzAqyP6Y9AW" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -134,7 +133,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584916673728</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="54 пересадки">
+      <created>1584993174544</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1584993174544</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -156,16 +162,30 @@
     <MESSAGE value="oh shit, here we go again" />
     <MESSAGE value="test1" />
     <MESSAGE value="аж трисет" />
-    <option name="LAST_COMMIT_MESSAGE" value="аж трисет" />
+    <MESSAGE value="54 пересадки" />
+    <option name="LAST_COMMIT_MESSAGE" value="54 пересадки" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/core/Station.java</url>
+          <line>28</line>
+          <properties class="core.Station" method="compareTo">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="82" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="stationsHashSetList" language="JAVA" />
         <watch expression="oldTreeSet.toArray()[0]" />
+        <watch expression="stationsHashSetList" language="JAVA" />
         <watch expression="linesList.get(100)" />
         <watch expression="connections" />
         <watch expression="this" />
+        <watch expression="((TreeMap.Entry)linesPlusStationsMap.entrySet().toArray()[0]).getValue()" custom="java.util.TreeMap.Entry" />
       </configuration>
     </watches-manager>
   </component>

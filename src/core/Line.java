@@ -27,6 +27,10 @@ public class Line implements Comparable<Line> {
         this.stations = stations;
     }
 
+    public void addStation(Station station) {
+        stations.add(station);
+    }
+
     public List<Station> getStations() {
         return stations;
     }
