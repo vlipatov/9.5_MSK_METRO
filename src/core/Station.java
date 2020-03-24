@@ -9,13 +9,10 @@ public class Station implements Comparable<Station> {
     private String lineNumber;
 
     public Station(String name, Line line) {
-
         this.name = name;
-
         this.line = line;
         lineNumber = line.getNumber();
     }
-
 
     public Line getLine() {
         return line;
@@ -33,7 +30,6 @@ public class Station implements Comparable<Station> {
         }
         return name.compareToIgnoreCase(station.getName());
     }
-
 
     public void setLine1(Line line1) {
         this.line = line1;

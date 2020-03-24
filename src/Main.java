@@ -6,6 +6,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 
 public class Main {
@@ -14,25 +16,16 @@ public class Main {
         Parser parser = new Parser(path);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Writer writer = new FileWriter("data/map.json");
-        toJson toJson = new toJson(parser.getLinesPlusStationsMap(), parser.getLinesSet(), parser.getConnectionsFinal());
-        gson.toJson(toJson, writer);
+        toJson toJSON = new toJson(parser.getLinesPlusStationsMap(), parser.getLinesSet(), parser.getConnectionsFinal());
+        gson.toJson(toJSON, writer);
         writer.close();
 
-//        FileReader reader = new FileReader("data/map.json");
-//        toJson fromJson = gson.fromJson(reader, toJson.class);
-//        fromJson.stations.keySet().stream().forEach(k -> System.out.println("На линии " + k + " => " + fromJson.stations.get(k).size() + " станций"));
-//        reader.close();
-//        JSONParser jsonParser = new JSONParser();
-//        try (Reader reader = new FileReader("data/map.json")) {
-//            JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
-//            System.out.println(jsonObject);
-//            JSONArray msg = (JSONArray) jsonObject.get("stations");
-//            System.out.println(msg);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+        FileReader fileReader = new FileReader("data/map.json");
+        toJson fromJSON = gson.fromJson(fileReader, toJson.class);
+
+        fromJSON.stations.keySet().stream().forEach(k -> System.out.println("На линии " + k + " - " + fromJSON.stations.get(k).size() + " станций"));
+        fileReader.close();
+
+    }
 }

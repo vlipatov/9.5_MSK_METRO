@@ -79,7 +79,9 @@ public class Parser {
         }
     }
 
-    /**                  Метод для получения формирования линий и массивов станций твынес в геттер                    */
+    /**
+     * Метод для получения формирования линий и массивов станций твынес в геттер
+     */
     public TreeMap<String, ArrayList<String>> getLinesPlusStationsMap() {
         String lineNumber;
         String tempLineNumber = null;
@@ -115,15 +117,17 @@ public class Parser {
         return linesSet;
     }
 
-    /**                  Метод для получения пересадок для записи в JSON вынес в геттер                               */
-    public HashSet<TreeSet<Station>> getConnectionsFinal() {
+    /**
+     * Метод для получения пересадок для записи в JSON вынес в геттер
+     */
+    public HashSet<HashSet<Station>> getConnectionsFinal() {
         String stationName;
         String lineNumber;
         String secondStationName;
         String secondLineNumber;
-        TreeSet<Station> stations = new TreeSet<>();
-        ArrayList<TreeSet<Station>> connections = new ArrayList<>();
-        HashSet<TreeSet<Station>> connectionsFinal;
+        HashSet<Station> stations = new HashSet<>();
+        ArrayList<HashSet<Station>> connections = new ArrayList<>();
+        HashSet<HashSet<Station>> connectionsFinal;
 
         for (String connection : allConnections) {
             int firstBracketStart = connection.indexOf("[") + 1;
@@ -138,31 +142,29 @@ public class Parser {
 
             for (Line line : linesSet) {
                 if (lineNumber.equals(line.getNumber())) {
-                    for (Station station : line.getStations())
-                    {
-                        if(stationName.equals(station.getName()))
+                    for (Station station : line.getStations()) {
+                        if (stationName.equals(station.getName()))
                             stations.add(station);
                     }
                     for (Line secondLine : linesSet) {
                         if (secondLineNumber.equals(secondLine.getNumber())) {
-                            for (Station secondStation : secondLine.getStations())
-                            {
-                                if(secondStationName.equals(secondStation.getName()))
+                            for (Station secondStation : secondLine.getStations()) {
+                                if (secondStationName.equals(secondStation.getName()))
                                     stations.add(secondStation);
                             }
                         }
                     }
-                    connections.add(new TreeSet<>(stations));
+                    connections.add(new HashSet<>(stations));
                     stations.clear();
                 }
             }
         }
 
-        ArrayList<TreeSet<Station>> connectionsCopy = new ArrayList<>(connections);
+        ArrayList<HashSet<Station>> connectionsCopy = new ArrayList<>(connections);
 
-        for (TreeSet<Station> oldTreeSet : connections) {
+        for (HashSet<Station> oldTreeSet : connections) {
             for (Station oldStation : oldTreeSet) {
-                for (TreeSet<Station> newTreeSet : connectionsCopy) {
+                for (HashSet<Station> newTreeSet : connectionsCopy) {
                     if (newTreeSet.contains(oldStation)) {
                         newTreeSet.addAll(oldTreeSet);
                     }
@@ -173,7 +175,10 @@ public class Parser {
 
         return connectionsFinal;
     }
-    /**                  Метод для форматирования текста в описании пересадки                                         */
+
+    /**
+     * Метод для форматирования текста в описании пересадки
+     */
     public static String trimmer(String string) {
         String newString = null;
         if (string.contains("Переход")) {
