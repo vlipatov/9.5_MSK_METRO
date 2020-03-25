@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.UnaryOperator;
 
 public class Parser {
     private List<String> linesPlusStations = new ArrayList<>();
@@ -19,11 +20,9 @@ public class Parser {
     private AtomicReference<String> templineName = new AtomicReference<>();
     private AtomicReference<String> tempStation = new AtomicReference<>();
 
-
     public Parser(String path) throws IOException {
         Document doc = Jsoup.connect(path).maxBodySize(0).get();
         Elements elements = doc.select("td");
-
         for (Element element : elements) {
             String lineName = element.getElementsByTag("span").attr("title");
             String lineColor = element.attr("style");
@@ -181,27 +180,36 @@ public class Parser {
      */
     public static String trimmer(String string) {
         String newString = null;
-        if (string.contains("Переход")) {
-            newString = string.substring(19);
-        } else if (string.contains("пересадка")) {
-            newString = string.substring(41);
-        }
-        if (newString.contains(" Московского центрального кольца")) {
-            newString = newString.substring(0, newString.length() - 32);
-        }
-        if (newString.contains("Большой кольцевой линии")) {
-            newString = newString.substring(0, newString.length() - 24);
-        }
-        if (newString.contains("линии")) {
-            newString = newString.substring(0, newString.lastIndexOf(" "));
-            newString = newString.substring(0, newString.lastIndexOf(" "));
-        }
-        if (newString.contains("(станция метро)")) {
-            newString = newString.substring(0, newString.length() - 16);
-        }
-        if (newString.contains("Московского монорельса"))
-            newString = newString.substring(0, newString.length() - 23);
+        HashMap<String, UnaryOperator<String>> trims = Main.getTrims();
 
+        for (String k : trims.keySet()) {
+            if(string.contains(k)){
+                newString = trims.get(k).apply(string);
+            }
+        }
+//        if (string.contains("Переход")) {
+//            newString = trims.get("Переход").apply(string);
+//
+//        } else if (string.contains("пересадка")) {
+//            newString = trims.get("пересадка").apply(string);
+//        }
+//
+//
+//        if (newString.contains(" Московского центрального кольца")) {
+//            newString = newString.substring(0, newString.length() - 32);
+//        }
+//        if (newString.contains("Большой кольцевой линии")) {
+//            newString = newString.substring(0, newString.length() - 24);
+//        }
+//        if (newString.contains("линии")) {
+//            newString = newString.substring(0, newString.lastIndexOf(" "));
+//            newString = newString.substring(0, newString.lastIndexOf(" "));
+//        }
+//        if (newString.contains("(станция метро)")) {
+//            newString = newString.substring(0, newString.length() - 16);
+//        }
+//        if (newString.contains("Московского монорельса"))
+//            newString = newString.substring(0, newString.length() - 23);
         return newString;
     }
 }
