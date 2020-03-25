@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="63f0b922-4f5f-40f8-b1cc-088829b99760" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parser.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -151,7 +150,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585081197113</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="UnaryOperator added.">
+      <created>1585156907084</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1585156907084</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -176,9 +182,24 @@
     <MESSAGE value="54 пересадки" />
     <MESSAGE value="55!" />
     <MESSAGE value="finally working - 55 connections, fromJson is ok." />
-    <option name="LAST_COMMIT_MESSAGE" value="finally working - 55 connections, fromJson is ok." />
+    <MESSAGE value="UnaryOperator added." />
+    <option name="LAST_COMMIT_MESSAGE" value="UnaryOperator added." />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Parser.java</url>
+          <line>161</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Parser.java</url>
+          <line>172</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="oldTreeSet.toArray()[0]" />

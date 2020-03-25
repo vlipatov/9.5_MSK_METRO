@@ -187,6 +187,11 @@ public class Parser {
                 newString = trims.get(k).apply(string);
             }
         }
+        for (String k : trims.keySet()) {
+            if(newString.contains(k)){
+                newString = trims.get(k).apply(newString);
+            }
+        }
 //        if (string.contains("Переход")) {
 //            newString = trims.get("Переход").apply(string);
 //
